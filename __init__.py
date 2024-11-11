@@ -180,63 +180,65 @@ class ShelfomaticOperator(bpy.types.Operator):
 
             num_panels = props.num_panels
             _board_distance = props.board_distance
+   
+            if (num <= num_elements - 2):
 
-            for i in range(0, num_panels):
+                for i in range(0, num_panels):
 
-                _ox = props.panel_offset.x
-                _oy = props.panel_offset.y
-                _oz = props.panel_offset.z
+                    _ox = props.panel_offset.x
+                    _oy = props.panel_offset.y
+                    _oz = props.panel_offset.z
 
-                panel_verts = [
-                    Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 - props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left botttom
-                    Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 - props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left bottom 
-                    Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 + props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left top
-                    Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 + props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left top
-                    Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x  ,_oy + scale_y * 0.5 - props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left botttom
-                    Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 - props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left bottom 
-                    Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 + props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left top
-                    Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 + props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)) # front left top 
-                ]
-                panel_edges = []
-
-                panel_faces = []
-
-                if num == 0:
-                    panel_faces = [
-                        [ 0, 1, 3, 2], # bottom
-                        #[ 4, 5, 7, 6], # top
-                        [ 0, 1, 5, 4], # left
-                        [ 2, 3, 7, 6], # right
-                        [ 0, 2, 6, 4], # front
-                        [ 1, 3, 7, 5]  # back
+                    panel_verts = [
+                        Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 - props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left botttom
+                        Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 - props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left bottom 
+                        Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 + props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left top
+                        Vector((_ox - _vbar_width / 2 * scale_x + distance * num , _oy + scale_y * 0.5 + props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left top
+                        Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x  ,_oy + scale_y * 0.5 - props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left botttom
+                        Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 - props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)), # front left bottom 
+                        Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 + props.board_thickness / 2, _oz +  props.board_height / 2 + _board_distance * i)), # back left top
+                        Vector((_ox + _vbar_width / 2 * scale_x + distance * num + (distance) -_vbar_width * scale_x ,_oy + scale_y * 0.5 + props.board_thickness / 2, _oz + -props.board_height / 2 + _board_distance * i)) # front left top 
                     ]
-                elif num == num_elements-1:
-                    panel_faces = [
-                        #[ 0, 1, 3, 2], # bottom
-                        [ 4, 5, 7, 6], # top
-                        [ 0, 1, 5, 4], # left
-                        [ 2, 3, 7, 6], # right
-                        [ 0, 2, 6, 4], # front
-                        [ 1, 3, 7, 5]  # back
-                    ]
-                else:
-                    panel_faces = [
-                        #[ 0, 1, 3, 2], # bottom
-                        #[ 4, 5, 7, 6], # top
-                        [ 0, 1, 5, 4], # left
-                        [ 2, 3, 7, 6], # right
-                        [ 0, 2, 6, 4], # front
-                        [ 1, 3, 7, 5]  # back
-                    ]
+                    panel_edges = []
 
-                panel_mesh = bpy.data.meshes.new(name="Shelfomatic_hold")
-                panel_obj = bpy.data.objects.new("Shelfomatic_hold", panel_mesh)
-                panel_mesh.from_pydata(panel_verts, panel_edges, panel_faces)                
-                # object_data_add(context, panel_mesh, operator=self)
-                collection = bpy.context.collection
-                collection.objects.link(panel_obj)
-                bpy.context.view_layer.objects.active = panel_obj
-                panel_obj.select_set(True)
+                    panel_faces = []
+
+                    if num == 0:
+                        panel_faces = [
+                            [ 0, 1, 3, 2], # bottom
+                            #[ 4, 5, 7, 6], # top
+                            [ 0, 1, 5, 4], # left
+                            [ 2, 3, 7, 6], # right
+                            [ 0, 2, 6, 4], # front
+                            [ 1, 3, 7, 5]  # back
+                        ]
+                    elif num == num_elements - 2:
+                        panel_faces = [
+                            #[ 0, 1, 3, 2], # bottom
+                            [ 4, 5, 7, 6], # top
+                            [ 0, 1, 5, 4], # left
+                            [ 2, 3, 7, 6], # right
+                            [ 0, 2, 6, 4], # front
+                            [ 1, 3, 7, 5]  # back
+                        ]
+                    else:
+                        panel_faces = [
+                            #[ 0, 1, 3, 2], # bottom
+                            #[ 4, 5, 7, 6], # top
+                            [ 0, 1, 5, 4], # left
+                            [ 2, 3, 7, 6], # right
+                            [ 0, 2, 6, 4], # front
+                            [ 1, 3, 7, 5]  # back
+                        ]
+
+                    panel_mesh = bpy.data.meshes.new(name="Shelfomatic_hold")
+                    panel_obj = bpy.data.objects.new("Shelfomatic_hold", panel_mesh)
+                    panel_mesh.from_pydata(panel_verts, panel_edges, panel_faces)                
+                    # object_data_add(context, panel_mesh, operator=self)
+                    collection = bpy.context.collection
+                    collection.objects.link(panel_obj)
+                    bpy.context.view_layer.objects.active = panel_obj
+                    panel_obj.select_set(True)
 
             bpy.ops.object.join()
 
