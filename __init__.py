@@ -47,20 +47,20 @@ class Shelfomatic_PG_Props(PropertyGroup):
     ]
 
     shelf_type : bpy.props.EnumProperty(name = "Shelf type",items=enum_options, default="TYPE_A")
-    num_panels : bpy.props.IntProperty(name="Num boards", min=1, default=2,update=update_func)
-    board_thickness : bpy.props.FloatProperty(name="Board width",min = 0.1, default=0.25, update=update_func)
-    board_height : bpy.props.FloatProperty(name="Board height", min = 0.1, default=1.5,update=update_func)
+    num_panels : bpy.props.IntProperty(name="Num boards", min=1, default=5,update=update_func)
+    board_thickness : bpy.props.FloatProperty(name="Board width",min = 0.1, default=8.25, update=update_func)
+    board_height : bpy.props.FloatProperty(name="Board height", min = 0.1, default=0.5,update=update_func)
     board_distance : bpy.props.FloatProperty(name="Board distance", min = 0.1, default=4,update=update_func)    
     vbar_width : bpy.props.FloatProperty(name="Vertical bar width", min = 1, default=1,update=update_func)
     roof_scale : bpy.props.FloatProperty(name="Tip scale", min = 0.1,default=0.3,update=update_func)
-    roof_height : bpy.props.FloatProperty(name="Tip height", min = 0.1,default=1,update=update_func)
-    distance : bpy.props.FloatProperty(name="Vertical Bar distance", min = 0,default=4,update=update_func)
-    num_elements : bpy.props.IntProperty(name="Num bars", min=1, default=8,update=update_func)
+    roof_height : bpy.props.FloatProperty(name="Tip height", min = 0.1,default=0.92,update=update_func)
+    distance : bpy.props.FloatProperty(name="Vertical Bar distance", min = 0,default=11,update=update_func)
+    num_elements : bpy.props.IntProperty(name="Num bars", min=1, default=3,update=update_func)
     bend : bpy.props.FloatProperty(name="Bend factor", default=0.0,update=update_func)
     
     scale : FloatVectorProperty(
         name="Lath scale",
-        default=(2.0, 0.3, 8.0),
+        default=(1.0, 0.3, 19.0),
         subtype='TRANSLATION',
         description="scaling",
         update=update_func
