@@ -18,6 +18,7 @@ from bpy.types import Operator
 from bpy.props import FloatVectorProperty
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty
+from bpy.props import StringProperty 
 from mathutils import Vector
 import math
 
@@ -73,6 +74,11 @@ class Shelfomatic_PG_Props(PropertyGroup):
         description="scaling",
         update=update_func
     )        
+
+    # Material properties
+    board_material: StringProperty(name="Board Material", default="")
+    vbar_material: StringProperty(name="Vertical Bar Material", default="")
+
 
 class ShelfomaticOperator(bpy.types.Operator):
 
@@ -178,6 +184,10 @@ class ShelfomaticOperator(bpy.types.Operator):
             bpy.context.view_layer.objects.active = obj
             obj.select_set(True)
 
+            # Apply material to the vertical bars
+            if props.vbar_material in bpy.data.materials:
+                obj.data.materials.append(bpy.data.materials[props.vbar_material])
+
             num_panels = props.num_panels
             _board_distance = props.board_distance
    
@@ -239,6 +249,10 @@ class ShelfomaticOperator(bpy.types.Operator):
                     collection.objects.link(panel_obj)
                     bpy.context.view_layer.objects.active = panel_obj
                     panel_obj.select_set(True)
+                    
+                    # Apply material to the boards
+                    if props.board_material in bpy.data.materials:
+                        panel_obj.data.materials.append(bpy.data.materials[props.board_material])
 
             bpy.ops.object.join()
 

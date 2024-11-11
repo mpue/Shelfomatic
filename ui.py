@@ -22,6 +22,7 @@ from bpy.types import Panel
 #
 
 class LZ_PT_MainPanel(Panel):
+    
     bl_label = 'Shelfomatic'
     bl_space_type = 'VIEW_3D'
     bl_region_type= 'UI'
@@ -60,6 +61,14 @@ class LZ_PT_MainPanel(Panel):
         row.prop(props, 'roof_scale')
         row = self.layout.row()
         row.prop(props, 'panel_offset')
+        row.separator()
+
+        # Add material selection fields
+        row = self.layout.row()
+        row.prop_search(props, "board_material", bpy.data, "materials", text="Board Material")
+        
+        row = self.layout.row()
+        row.prop_search(props, "vbar_material", bpy.data, "materials", text="Vertical Bar Material")
 
 
 def register():
