@@ -106,7 +106,8 @@ class ShelfomaticOperator(bpy.types.Operator):
                     size_y = random.randint(4,int(props.board_thickness * 0.8))
                     size_z = random.randint(4,int(props.board_distance * 0.8))
 
-                    obj = self.add_random_box(context, i * dist + dist/2, props.board_distance / 2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
+                    obj = self.add_random_box(context, i * dist + dist/2, props.board_thickness/2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
+                    obj.rotation_euler.z += random.uniform(-1, 1)
                     obj.select_set(True)
 
             # Deselect all objects
