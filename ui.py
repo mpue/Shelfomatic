@@ -41,6 +41,8 @@ class LZ_PT_MainPanel(Panel):
         row.separator()
         row.prop(props, 'scale')
         row = self.layout.row()
+        row.prop(props, 'num_shelves')
+        row = self.layout.row()
         row.prop(props, 'board_width')
         row = self.layout.row()
         row.prop(props, 'num_panels')
@@ -70,7 +72,9 @@ class LZ_PT_MainPanel(Panel):
         row = self.layout.row()
         row.prop_search(props, "vbar_material", bpy.data, "materials", text="Vertical Bar Material")
 
-
+        row = self.layout.row()
+        row.prop_search(props, "box_material", bpy.data, "materials", text="Box Material")    
+        
 def register():
     bpy.utils.register_class(LZ_PT_MainPanel)
 

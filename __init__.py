@@ -21,6 +21,7 @@ from bpy.props import PointerProperty
 from bpy.props import StringProperty 
 from mathutils import Vector
 import math
+import random
 
 bl_info = {
         "name": "Shelfomatic",
@@ -44,10 +45,11 @@ def update_func(self,context):
 class Shelfomatic_PG_Props(PropertyGroup):
 
     enum_options = [
-        ("TYPE_A", "Latten", "A classic shelf" ,"MOD_LATTICE",1),
+        ("TYPE_A", "Industrial ", "A classic shelf" ,"MOD_SHELF",1),
     ]
 
     shelf_type : bpy.props.EnumProperty(name = "Shelf type",items=enum_options, default="TYPE_A")
+    num_shelves : bpy.props.IntProperty(name="Num shelves", min=1, default=1,update=update_func)
     num_panels : bpy.props.IntProperty(name="Num boards", min=1, default=5,update=update_func)
     board_thickness : bpy.props.FloatProperty(name="Board width",min = 0.1, default=8.25, update=update_func)
     board_height : bpy.props.FloatProperty(name="Board height", min = 0.1, default=0.5,update=update_func)
@@ -78,7 +80,7 @@ class Shelfomatic_PG_Props(PropertyGroup):
     # Material properties
     board_material: StringProperty(name="Board Material", default="")
     vbar_material: StringProperty(name="Vertical Bar Material", default="")
-
+    box_material: StringProperty(name="Box Material", default="")
 
 class ShelfomaticOperator(bpy.types.Operator):
 
@@ -93,6 +95,34 @@ class ShelfomaticOperator(bpy.types.Operator):
 
         if context.scene.props.shelf_type == 'TYPE_A':
             self.add_element(context, props.num_elements,props.distance)
+            self.add_array(context)
+
+            obj = None
+            dist = props.distance
+
+            for i in range(0,props.num_elements-1):
+                for j in range(0,props.num_panels):
+                    size_x = random.randint(4,int(dist*0.8))
+                    size_y = random.randint(4,int(props.board_thickness * 0.8))
+                    size_z = random.randint(4,int(props.board_distance * 0.8))
+
+                    obj = self.add_random_box(context, i * dist + dist/2, props.board_distance / 2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
+                    obj.select_set(True)
+
+            # Deselect all objects
+            bpy.ops.object.select_all(action='DESELECT')
+
+            # Select all objects starting with "Cube"
+            for obj in bpy.data.objects:
+                if obj.name.startswith("Cube") or obj.name.startswith("Shelf"):
+                    obj.select_set(True)
+
+            # Make sure one of the selected objects is active (required for joining)
+            if bpy.context.selected_objects:
+                bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
+
+            # Join the selected objects
+            bpy.ops.object.join()
 
         elif context.scene.props.shelf_type == 'TYPE_A':
             pass
@@ -275,6 +305,40 @@ class ShelfomaticOperator(bpy.types.Operator):
 
         # Update the scene to see the changes
         bpy.context.view_layer.update()
+
+    def add_array(self, context):
+        obj = bpy.context.active_object
+
+    # Check if an object is selected
+        if obj:
+             # Add the Array Modifier
+            array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
+             
+            props = context.scene.props
+            # Configure the modifier properties
+            array_modifier.count = props.num_shelves  # Number of copies
+            array_modifier.use_relative_offset = True  # Use relative offset
+            array_modifier.relative_offset_displace[0] = 0  # Offset on X-axis
+            array_modifier.relative_offset_displace[1] = 2.5  # Offset on X-axis
+            
+            # Optional: Add object-based offset (e.g., an Empty)
+            # empty = bpy.data.objects["Empty"]  # Replace "Empty" with your object's name
+            # array_modifier.use_object_offset = True
+            # array_modifier.offset_object = empty
+
+            print("Array Modifier added to:", obj.name)
+        else:
+            print("No active object selected!")
+
+    def add_random_box(self,context, x,y,z, box_width, box_depth, box_height):
+                # Create a cube mesh for the box
+        bpy.ops.mesh.primitive_cube_add(size=1, location=(x, y, z))        
+        box = bpy.context.object
+        box.scale = (box_width, box_depth, box_height)
+        box.select_set(True)
+        if context.scene.props.vbar_material in bpy.data.materials:
+            box.data.materials.append(bpy.data.materials[context.scene.props.box_material])
+        return box
 
 
 def register():
