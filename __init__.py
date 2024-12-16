@@ -106,9 +106,12 @@ class ShelfomaticOperator(bpy.types.Operator):
                     size_y = random.randint(4,int(props.board_thickness * 0.8))
                     size_z = random.randint(4,int(props.board_distance * 0.8))
 
-                    obj = self.add_random_box(context, i * dist + dist/2, props.board_thickness/2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
-                    obj.rotation_euler.z += random.uniform(-1, 1)
-                    obj.select_set(True)
+                    probability = random.uniform(-1, 1);
+                    
+                    if (probability > 0):
+                        obj = self.add_random_box(context, i * dist + dist/2, props.board_thickness/2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
+                        obj.rotation_euler.z += random.uniform(-1, 1)
+                        obj.select_set(True)
 
             # Deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
@@ -116,20 +119,22 @@ class ShelfomaticOperator(bpy.types.Operator):
             # Select all objects starting with "Cube"
             for obj in bpy.data.objects:
                 if obj.name.startswith("Cube") or obj.name.startswith("Shelf"):
-                    obj.select_set(True)
+                    obj.select_set(True)                    
 
             # Make sure one of the selected objects is active (required for joining)
             if bpy.context.selected_objects:
                 bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
 
-            # Join the selected objects
-            bpy.ops.object.join()
+                # Join the selected objects
+                bpy.ops.object.join()
+                bpy.context.selected_objects[0].location.y += 10
 
-        elif context.scene.props.shelf_type == 'TYPE_A':
-            pass
 
-        else:
-            pass
+            elif context.scene.props.shelf_type == 'TYPE_A':
+                pass
+
+            else:
+                pass
 
         return {'FINISHED'}
     
