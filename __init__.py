@@ -60,6 +60,7 @@ class Shelfomatic_PG_Props(PropertyGroup):
     distance : bpy.props.FloatProperty(name="Vertical Bar distance", min = 0,default=11,update=update_func)
     num_elements : bpy.props.IntProperty(name="Num bars", min=1, default=3,update=update_func)
     bend : bpy.props.FloatProperty(name="Bend factor", default=0.0,update=update_func)
+    min_probability : bpy.props.FloatProperty(name="Package probability", default=1.0, min=0.0, update=update_func)
     
     scale : FloatVectorProperty(
         name="Lath scale",
@@ -106,11 +107,11 @@ class ShelfomaticOperator(bpy.types.Operator):
                     size_y = random.randint(4,int(props.board_thickness * 0.8))
                     size_z = random.randint(4,int(props.board_distance * 0.8))
 
-                    probability = random.uniform(-1, 1);
+                    probability = random.uniform(0, 1);
                     
-                    if (probability > 0):
+                    if (probability > 1 - props.min_probability):
                         obj = self.add_random_box(context, i * dist + dist/2, props.board_thickness/2 ,props.panel_offset.z + j * props.board_distance + size_z / 2 ,size_x,size_y,size_z)
-                        obj.rotation_euler.z += random.uniform(-1, 1)
+                        obj.rotation_euler.z += random.uniform(-0.2, 0.2)
                         obj.select_set(True)
 
             # Deselect all objects

@@ -63,6 +63,9 @@ class LZ_PT_MainPanel(Panel):
         row.prop(props, 'roof_scale')
         row = self.layout.row()
         row.prop(props, 'panel_offset')
+        row = self.layout.row()
+        row.prop(props, 'min_probability')
+        row = self.layout.row()
         row.separator()
 
         # Add material selection fields
