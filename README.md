@@ -1,4 +1,4 @@
-#Shelfomatic
+# Shelfomatic
 
 This is a plugin to geberate shelves in Blender.
 
